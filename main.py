@@ -1,11 +1,21 @@
 import whisper
+from time import time
+from pathlib import Path
 
 # основная функиция, в которой будет происходить транскрибация аудио файла
 def speech_recognition(model='base'):    # whisper предлагает 5 разных моделей дла обрабокти звука, по умолчанию используем base
+    start_time = time()
     speech_model = whisper.load_model(model)  # загрузим модель
-    result = speech_model.transcribe('/media/andrew/75A74AA74301978F/PycharmProjects/SpeechRecognizer/Input/1.mp3', fp16=False)    #выполняем трансрибацию текста
-    with open(f'transcription_{model}.txt', 'w') as file:    #сохраняем полученный текст в файл
-        file.write(result['text'])
+    input_files = Path('D:\Audio&Image editing\SpeechRecognizer\Input audio').glob('*.mp3')    #пробежимся по всем mp3 йафлам в папке
+    for audio_file in input_files:
+        file_name = Path(audio_file).stem
+        print(audio_file)
+        print(file_name)
+        result = speech_model.transcribe(str(audio_file), fp16=False)    #выполняем транскрибацию аудио файла
+        with open(f'D:\Audio&Image editing\SpeechRecognizer\Output texts\{file_name}_{model}.txt', 'w') as file:    #сохраняем полученный текст в файл
+            file.write(result['text'])
+    end_time = time()
+    print(f'Транскрибация завершена за {int(end_time-start_time)} секунд')
 
 def main():
     trans_models = {1: 'tiny', 2: 'base', 3: 'small', 4: 'medium', 5: 'large'}    #создадим список доступных моделей для дальнейшего выбора и покажем их
