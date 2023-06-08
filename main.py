@@ -9,8 +9,6 @@ def speech_recognition(model='base'):    # whisper предлагает 5 раз
     input_files = Path('D:\Audio&Image editing\SpeechRecognizer\Input audio').glob('*.mp3')    #пробежимся по всем mp3 йафлам в папке
     for audio_file in input_files:
         file_name = Path(audio_file).stem
-        print(audio_file)
-        print(file_name)
         result = speech_model.transcribe(str(audio_file), fp16=False)    #выполняем транскрибацию аудио файла
         with open(f'D:\Audio&Image editing\SpeechRecognizer\Output texts\{file_name}_{model}.txt', 'w') as file:    #сохраняем полученный текст в файл
             file.write(result['text'])
